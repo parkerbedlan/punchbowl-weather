@@ -12,9 +12,14 @@ export const FAVORITE_ERROR_MESSAGE =
 
 const FAVORITES_URL = `${process.env.NEXT_PUBLIC_API_BASE}/api/user_favorites`;
 
-const fetcher = (path) =>
-  fetch(path)
-    .then((response) => response.json());
+const fetcher = async (path: string) => {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error(`The favorites request failed with HTTP ${response.status}`);
+  }
+
+  return response.json();
+};
 
 export const useUserFavorites = () => {
   const { data, error, mutate } = useSWR<Array<UserFavorite>, Error>(
