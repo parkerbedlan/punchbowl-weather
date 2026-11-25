@@ -2,9 +2,11 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative "../config/environment"
 require "rails/test_help"
 require_relative "support/open_weather_stub"
+require_relative "support/saved_weather"
 
 class ActiveSupport::TestCase
   include OpenWeatherStub
+  include SavedWeather
 
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)

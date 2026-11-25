@@ -32,6 +32,7 @@ gem 'rack-cors', '~> 3.0'
 
 gem 'open-weather-ruby-client', '~> 0.6'
 gem 'geocoder', '~> 1.8'
+gem 'solid_queue', '~> 1.7'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
