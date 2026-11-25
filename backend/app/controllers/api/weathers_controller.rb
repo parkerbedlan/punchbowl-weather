@@ -2,6 +2,8 @@ class Api::WeathersController < ApplicationController
 
   def show
     location = Location.get(params[:location_id])
+    return head :not_found if location.nil?
+
     client = OpenWeather::Client.new
     data = client.current_weather(lat: location.lat, lon: location.lon)
 

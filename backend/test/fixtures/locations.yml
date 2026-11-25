@@ -1,0 +1,11 @@
+new_york:
+  slug: new_york
+  name: New York, New York
+  lat: 40.7128
+  lon: -74.0060
+
+boston:
+  slug: boston
+  name: Boston, Massachusetts
+  lat: 42.3601
+  lon: -71.0589

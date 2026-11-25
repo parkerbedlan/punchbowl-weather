@@ -5,19 +5,28 @@ class LocationTest < ActiveSupport::TestCase
     location = Location.new(slug: 'new_york', name: 'New York', lat: 40.7128, lon: -74.0060)
     assert_instance_of Location, location
     assert_equal 'New York', location.name
-    assert_in_delta 40.7128, location.lat.to_f
-    assert_in_delta(-74.0060, location.lon.to_f)
+    assert_in_delta 40.7128, location.lat
+    assert_in_delta(-74.0060, location.lon)
   end
 
   test "list returns every location" do
     locations = Location.list
-    assert_equal Location::LOCATIONS.size, locations.size
-    assert locations.all? { |location| location.is_a?(Location) }
+    assert_equal %w[boston new_york], locations.map(&:slug).sort
   end
 
   test "get location by id" do
     location = Location.get(:boston)
     assert_equal 'Boston, Massachusetts', location.name
+  end
+
+  test "get returns nil for a slug with no location" do
+    assert_nil Location.get(:atlantis)
+  end
+
+  test "slug is unique" do
+    location = Location.new(slug: 'boston', name: 'Boston again')
+    assert_not location.valid?
+    assert_includes location.errors[:slug], 'has already been taken'
   end
 
   test "can lookup location by coordinates" do

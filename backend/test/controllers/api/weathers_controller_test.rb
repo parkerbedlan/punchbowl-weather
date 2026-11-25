@@ -5,5 +5,10 @@ class Api::WeathersControllerTest < ActionDispatch::IntegrationTest
     get api_location_weather_path(:boston), as: :json
     assert_response :success
   end
+
+  test 'get the weather for a slug with no location returns not found' do
+    get api_location_weather_path(:atlantis), as: :json
+    assert_response :not_found
+  end
 end
 

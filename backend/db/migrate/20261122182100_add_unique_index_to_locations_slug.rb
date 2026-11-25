@@ -1,0 +1,5 @@
+class AddUniqueIndexToLocationsSlug < ActiveRecord::Migration[8.1]
+  def change
+    add_index :locations, :slug, unique: true
+  end
+end
