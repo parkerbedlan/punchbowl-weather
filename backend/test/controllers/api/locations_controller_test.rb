@@ -109,4 +109,16 @@ class Api::LocationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
   end
+
+  test 'create with a place that has no country returns bad request' do
+    post api_locations_path, params: { place: { city: 'Springfield', state: 'Missouri' } }, as: :json
+
+    assert_response :bad_request
+  end
+
+  test 'create with a place that has no city returns bad request' do
+    post api_locations_path, params: { place: { state: 'Missouri', country: 'US' } }, as: :json
+
+    assert_response :bad_request
+  end
 end

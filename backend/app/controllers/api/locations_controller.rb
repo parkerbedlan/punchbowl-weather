@@ -26,7 +26,10 @@ class Api::LocationsController < ApplicationController
   private
 
   def place_params
-    params.expect(place: [:city, :state, :country]).to_h.symbolize_keys
+    place = params.expect(place: [:city, :state, :country])
+    city, country = place.require([:city, :country])
+
+    { city:, country:, state: place[:state] }
   end
 
   # The shape the frontend expects; see the Location type in
