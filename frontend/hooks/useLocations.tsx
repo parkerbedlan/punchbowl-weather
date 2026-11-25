@@ -1,4 +1,6 @@
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
+
+import { LocationCandidate } from "./useLocationCandidates";
 
 export type Location = {
   slug: string;
@@ -10,6 +12,9 @@ export const LOCATIONS_ERROR_MESSAGE =
   "We couldn't load the locations. Please reload the page.";
 
 export const LOCATION_MISSING_MESSAGE = "We couldn't find that location.";
+
+export const LOCATION_ADD_ERROR_MESSAGE =
+  "We couldn't add that location. Please try again.";
 
 const LOCATIONS_URL = `${process.env.NEXT_PUBLIC_API_BASE}/api/locations`;
 
@@ -43,5 +48,25 @@ export const useLocation = (slug?: string) => {
     location,
     isMissing: Boolean(slug && locations && !location),
     isError,
+  };
+};
+
+export const useAddLocation = () => {
+  const { mutate } = useSWRConfig();
+
+  return async ({ city, state, country }: LocationCandidate) => {
+    const response = await fetch(LOCATIONS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ place: { city, state, country } }),
+    });
+    if (!response.ok) {
+      throw new Error(`The add location request failed with HTTP ${response.status}`);
+    }
+
+    const location: Location = await response.json();
+    await mutate(LOCATIONS_URL);
+
+    return location;
   };
 };

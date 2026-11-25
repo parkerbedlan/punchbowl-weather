@@ -11,6 +11,7 @@ import {
 } from "@headlessui/react";
 import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { LocationNav } from "./LocationNav";
+import { LocationSearch } from "./LocationSearch";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -118,6 +119,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               <span className="sr-only">Open sidebar</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
+            <LocationSearch />
           </div>
 
           <main className="flex-1 relative overflow-y-auto focus:outline-none">
