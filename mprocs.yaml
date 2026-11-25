@@ -1,0 +1,7 @@
+procs:
+  backend:
+    cwd: backend
+    shell: bin/rails server -p 3001
+  frontend:
+    cwd: frontend
+    shell: yarn run dev
