@@ -6,12 +6,9 @@ module Locations
     def self.search(query)
       return [] if query.blank?
 
-      places = OpenWeather::Client.new.get(
-        'direct',
-        endpoint: 'https://api.openweathermap.org/geo/1.0',
-        q: query,
-        limit: 5
-      )
+      places = OpenWeatherAccount.current.call do |client|
+        client.get('direct', endpoint: 'https://api.openweathermap.org/geo/1.0', q: query, limit: 5)
+      end
 
       places
         .map { new(city: it['name'], state: it['state'], country: it['country'], lat: it['lat'], lon: it['lon']) }

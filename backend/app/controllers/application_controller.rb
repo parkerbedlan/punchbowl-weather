@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  rescue_from(OpenWeatherAccount::CallsPaused) { head :service_unavailable }
+
   private
 
   # Authentication is out of scope for this challenge, so the first user stands

@@ -30,7 +30,7 @@ module Locations
     private
 
     def fetch_weather
-      weather = OpenWeather::Client.new.current_weather(lat:, lon:)
+      weather = OpenWeatherAccount.current.call { it.current_weather(lat:, lon:) }
       fetched_at = Time.current
 
       update!(
@@ -38,6 +38,8 @@ module Locations
         weather_fetched_at: fetched_at,
         weather_refresh_after: fetched_at + WEATHER_FRESH_FOR
       )
+    rescue OpenWeatherAccount::CallsPaused
+      logger.info "Skipped the OpenWeather request for #{slug} while calls are paused"
     rescue Faraday::Error => error
       logger.warn "The OpenWeather request for #{slug} failed with #{error.class} (HTTP #{error.response_status.inspect})"
     end

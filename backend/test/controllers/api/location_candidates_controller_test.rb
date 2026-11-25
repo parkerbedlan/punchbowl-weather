@@ -43,4 +43,16 @@ class Api::LocationCandidatesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :service_unavailable
   end
+
+  test 'index during a pause returns service unavailable and makes no OpenWeather request' do
+    pause_open_weather_calls
+
+    with_open_weather do |client|
+      get api_location_candidates_path(query: 'london'), as: :json
+
+      assert_empty client.place_queries
+    end
+
+    assert_response :service_unavailable
+  end
 end

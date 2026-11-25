@@ -33,6 +33,14 @@ module OpenWeatherStub
     { 'name' => name, 'state' => state, 'country' => country, 'lat' => lat, 'lon' => lon }.compact
   end
 
+  def open_weather_refusal(status)
+    OpenWeather::Errors::Fault.new(status:, headers: {}, body: { 'cod' => status })
+  end
+
+  def pause_open_weather_calls(until_time: 5.minutes.from_now)
+    OpenWeatherAccount.current.update!(calls_paused_until: until_time)
+  end
+
   def with_open_weather(payload_or_error = open_weather_payload, places: [])
     client = FakeClient.new(payload_or_error, places)
     OpenWeather::Client.define_singleton_method(:new) { client }

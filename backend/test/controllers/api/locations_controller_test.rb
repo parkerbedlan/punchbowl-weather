@@ -90,6 +90,20 @@ class Api::LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :service_unavailable
   end
 
+  test 'create during a pause saves nothing and makes no OpenWeather request' do
+    pause_open_weather_calls
+
+    with_open_weather(places: [open_weather_place('Springfield', 'Missouri', 'US')]) do |client|
+      assert_no_difference 'Location.count' do
+        post api_locations_path, params: { place: { city: 'Springfield', state: 'Missouri', country: 'US' } }, as: :json
+      end
+
+      assert_empty client.place_queries
+    end
+
+    assert_response :service_unavailable
+  end
+
   test 'create with no place returns bad request' do
     post api_locations_path, params: {}, as: :json
 

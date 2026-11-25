@@ -7,6 +7,7 @@ class Locations::WeatherRefreshConcurrencyTest < ActiveSupport::TestCase
 
   teardown do
     Location.update_all(weather_data: nil, weather_fetched_at: nil, weather_refresh_after: nil)
+    OpenWeatherAccount.delete_all
   end
 
   test 'only one of the requests that see a refresh is due calls OpenWeather' do

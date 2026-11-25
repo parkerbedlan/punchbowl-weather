@@ -54,6 +54,12 @@ class SevereWeatherAlertsJobTest < ActiveJob::TestCase
     assert_silent { run_job(Faraday::TimeoutError.new) }
   end
 
+  test "a failed fetch that concerns the whole account stops the fetches for the other locations" do
+    users(:current).user_favorites.create!(location: locations(:new_york))
+
+    assert_equal 1, run_job(Faraday::TimeoutError.new).call_count
+  end
+
   test "the same event does not send again within 6 hours" do
     save_weather(locations(:boston), condition_ids: [TORNADO])
     assert_output(/tornado/) { run_job }

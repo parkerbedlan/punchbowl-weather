@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_24_235601) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_25_141051) do
   create_table "locations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.float "lat"
@@ -23,6 +23,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_24_235601) do
     t.datetime "weather_refresh_after"
     t.index ["name"], name: "index_locations_on_name", unique: true
     t.index ["slug"], name: "index_locations_on_slug", unique: true
+  end
+
+  create_table "open_weather_accounts", force: :cascade do |t|
+    t.datetime "calls_paused_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "severe_weather_alerts", force: :cascade do |t|

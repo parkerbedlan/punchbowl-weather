@@ -57,7 +57,7 @@ class Api::WeathersControllerTest < ActionDispatch::IntegrationTest
   test 'a request returns the saved weather when OpenWeather refuses the call' do
     save_weather(temperature: 30.0, fetched_at: 10.minutes.ago, refresh_after: Time.current)
 
-    with_open_weather(OpenWeather::Errors::Fault.new(status: 429, headers: {}, body: { 'cod' => 429 })) do
+    with_open_weather(open_weather_refusal(429)) do
       get api_location_weather_path(:boston), as: :json
 
       assert_response :success
@@ -97,6 +97,29 @@ class Api::WeathersControllerTest < ActionDispatch::IntegrationTest
 
       assert_response :service_unavailable
       assert_equal 0, client.call_count
+    end
+  end
+
+  test 'a failed call that concerns the whole account stops calls for every location' do
+    with_open_weather(Faraday::TimeoutError.new) do |client|
+      get api_location_weather_path(:boston), as: :json
+      get api_location_weather_path(:new_york), as: :json
+
+      assert_response :service_unavailable
+      assert_equal 1, client.call_count
+    end
+  end
+
+  test 'a request returns the saved weather and does not call OpenWeather during a pause' do
+    save_weather(temperature: 30.0, fetched_at: 10.minutes.ago, refresh_after: Time.current)
+    pause_open_weather_calls
+
+    with_open_weather(open_weather_payload) do |client|
+      get api_location_weather_path(:boston), as: :json
+
+      assert_response :success
+      assert_equal 0, client.call_count
+      assert_equal 30.0, response.parsed_body['temperature']
     end
   end
 
