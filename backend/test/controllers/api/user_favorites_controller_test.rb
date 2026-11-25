@@ -35,6 +35,12 @@ class Api::UserFavoritesControllerTest < ActionDispatch::IntegrationTest
     assert_equal user_favorites(:current_boston).id, response.parsed_body['id']
   end
 
+  test 'create writes no audit event for a location that is already a favorite' do
+    assert_no_difference -> { AuditEvent.count } do
+      post api_user_favorites_path, params: { location_id: locations(:boston).id }, as: :json
+    end
+  end
+
   test 'create returns not found for a location that does not exist' do
     assert_no_difference -> { UserFavorite.count } do
       post api_user_favorites_path, params: { location_id: 0 }, as: :json

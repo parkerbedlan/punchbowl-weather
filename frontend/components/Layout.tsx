@@ -10,6 +10,7 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { AdminNav } from "./AdminNav";
 import { LocationNav } from "./LocationNav";
 import { LocationSearch } from "./LocationSearch";
 
@@ -83,6 +84,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
                     <LocationNav variant="mobile" />
+                    <AdminNav variant="mobile" />
                   </nav>
                 </div>
               </DialogPanel>
@@ -104,6 +106,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               <div className="flex-1 flex flex-col overflow-y-auto">
                 <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
                   <LocationNav variant="desktop" />
+                  <AdminNav variant="desktop" />
                 </nav>
               </div>
             </div>

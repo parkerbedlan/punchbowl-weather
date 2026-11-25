@@ -11,4 +11,8 @@ class ApplicationController < ActionController::API
   def current_user
     @current_user ||= User.first
   end
+
+  def require_current_user
+    head :not_found if current_user.nil?
+  end
 end

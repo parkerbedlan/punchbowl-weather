@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_25_141051) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_25_145838) do
+  create_table "audit_events", force: :cascade do |t|
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.json "data", null: false
+    t.index ["action", "created_at"], name: "index_audit_events_on_action_and_created_at"
+  end
+
   create_table "locations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.float "lat"
@@ -204,6 +211,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_25_141051) do
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "role", default: "member", null: false
     t.datetime "updated_at", null: false
   end
 

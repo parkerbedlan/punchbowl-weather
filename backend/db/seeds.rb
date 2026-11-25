@@ -15,4 +15,4 @@
   end
 end
 
-User.first_or_create!
+User.first_or_create!.update!(role: :admin)

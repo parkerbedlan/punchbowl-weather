@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  enum :role, { member: 'member', admin: 'admin' }
+
   has_many :user_favorites, dependent: :destroy
   has_many :severe_weather_alerts, dependent: :destroy
 

@@ -10,5 +10,10 @@ Rails.application.routes.draw do
     # destroy takes a location id rather than a UserFavorite id; see
     # Api::UserFavoritesController#destroy.
     resources :user_favorites, only: [:index, :create, :destroy]
+    resource :current_user, only: [:show]
+
+    namespace :admin do
+      resources :location_favorite_counts, only: [:index]
+    end
   end
 end

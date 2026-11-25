@@ -29,8 +29,4 @@ class Api::UserFavoritesController < ApplicationController
   # The shape the frontend expects; see the UserFavorite type in
   # frontend/hooks/useFavorites.tsx.
   FAVORITE_FIELDS = [:id, :location_id, :user_id].freeze
-
-  def require_current_user
-    head :not_found if current_user.nil?
-  end
 end
