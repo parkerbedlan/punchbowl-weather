@@ -33,6 +33,29 @@ class OpenWeatherAccountTest < ActiveSupport::TestCase
     assert_nil pause_after(open_weather_refusal(400))
   end
 
+  test 'a pause writes an audit event with the cause' do
+    pause_after(open_weather_refusal(429))
+
+    audit_event = AuditEvent.sole
+    assert_predicate audit_event, :pause_open_weather_calls?
+    assert_equal(
+      { 'error' => 'OpenWeather::Errors::Fault', 'http_status' => 429, 'paused_until' => 10.minutes.from_now.as_json },
+      audit_event.data
+    )
+  end
+
+  test 'a pause after no response writes an audit event with no HTTP status' do
+    pause_after(Faraday::TimeoutError.new)
+
+    assert_equal ['Faraday::TimeoutError', nil], AuditEvent.sole.data.values_at('error', 'http_status')
+  end
+
+  test 'a failed call that starts no pause writes no audit event' do
+    pause_after(open_weather_refusal(400))
+
+    assert_empty AuditEvent.all
+  end
+
   test 'a call during a pause raises and does not reach OpenWeather' do
     pause_open_weather_calls(until_time: 1.second.from_now)
 

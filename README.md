@@ -36,6 +36,8 @@ Run `bin/rails db:seed` to make that user an admin again.
 
 Each favorite and each unfavorite writes one row to `audit_events`. The dashboard reads the present count from `user_favorites` and the past from these events.
 
+Each account-wide pause of the OpenWeather calls also writes one row. The row holds the error class, the HTTP status, and the time the pause ends.
+
 A favorite made before this table existed has no event. This task writes the missing events, with the time of each favorite. It is safe to run more than once:
 
 ```sh

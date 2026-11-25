@@ -39,6 +39,10 @@ class OpenWeatherAccount < ApplicationRecord
   def pause_calls_after(error)
     pause = error.response_status == 429 ? PAUSE_AFTER_RATE_LIMIT : PAUSE_AFTER_FAILURE
     update!(calls_paused_until: pause.from_now)
+    AuditEvent.create!(
+      action: :pause_open_weather_calls,
+      data: { error: error.class.name, http_status: error.response_status, paused_until: calls_paused_until }
+    )
     logger.warn "OpenWeather calls are paused until #{calls_paused_until.iso8601} " \
                 "after #{error.class} (HTTP #{error.response_status.inspect})"
   end
