@@ -1,7 +1,8 @@
 import { LocationWeather } from "../components/LocationWeather";
-
-const DEFAULT_LOCATION_SLUG = "new_york";
+import { useLocations } from "../hooks/useLocations";
 
 export default function Home() {
-  return <LocationWeather slug={DEFAULT_LOCATION_SLUG} />;
+  const { locations } = useLocations();
+
+  return <LocationWeather slug={locations?.[0]?.slug} />;
 }
