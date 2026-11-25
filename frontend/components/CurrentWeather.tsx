@@ -25,8 +25,8 @@ export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
       </div>
 
       <div className="grid grid-cols-3 px-2 text-center">
-        <div className="text-sm font-medium">Wind Speed</div>
         <div className="text-sm font-medium">Feels Like</div>
+        <div className="text-sm font-medium">Wind Speed</div>
         <div className="text-sm font-medium">Humidity</div>
 
         <div className="text-lg font-medium">
