@@ -8,7 +8,7 @@ export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
   if (!weather) return null;
 
   return (
-    <div className="space-y-4 min-w-[400px]">
+    <div className="space-y-4">
       <div className="flex flex-row justify-center items-center bg-white text-gray-900 antialiased rounded-md p-4 shadow-lg">
         <img
           className="w-[100px] h-[100px]"
