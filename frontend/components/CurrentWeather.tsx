@@ -2,9 +2,15 @@ import React from "react";
 import capitalize from "capitalize";
 
 import { LastUpdated } from "./LastUpdated";
+import {
+  formatTemperature,
+  useTemperatureUnit,
+} from "../hooks/useTemperatureUnit";
 import { Weather } from "../hooks/useWeather";
 
 export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
+  const { unit } = useTemperatureUnit();
+
   if (!weather) return null;
 
   return (
@@ -17,7 +23,7 @@ export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
         />
         <div className="flex flex-col justify-center">
           <div className="text-4xl font-bold">
-            {Math.round(weather.temperature)}°
+            {formatTemperature(weather.temperature, unit)}
           </div>
           <div className="text-lg font-normal tracking-tight">
             {capitalize.words(weather.description)}
@@ -31,7 +37,7 @@ export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
         <div className="text-sm font-medium">Humidity</div>
 
         <div className="text-lg font-medium">
-          {Math.round(weather.feelsLike)}°
+          {formatTemperature(weather.feelsLike, unit)}
         </div>
         <div className="text-lg font-medium">{Math.round(weather.wind)} mph</div>
         <div className="text-lg font-medium">{Math.round(weather.humidity)}%</div>

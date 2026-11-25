@@ -10,9 +10,9 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
-import { AdminNav } from "./AdminNav";
 import { LocationNav } from "./LocationNav";
 import { LocationSearch } from "./LocationSearch";
+import { PageNav } from "./PageNav";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -83,7 +83,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
-                    <AdminNav variant="mobile" />
+                    <PageNav variant="mobile" />
                     <LocationNav variant="mobile" />
                   </nav>
                 </div>
@@ -105,7 +105,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               </div>
               <div className="flex-1 flex flex-col overflow-y-auto">
                 <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
-                  <AdminNav variant="desktop" />
+                  <PageNav variant="desktop" />
                   <LocationNav variant="desktop" />
                 </nav>
               </div>
