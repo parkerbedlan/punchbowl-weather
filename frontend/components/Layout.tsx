@@ -1,8 +1,9 @@
 import React, { ReactNode } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -15,7 +16,16 @@ import { LocationSearch } from "./LocationSearch";
 import { PageNav } from "./PageNav";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const closeSidebar = () => setSidebarOpen(false);
+
+    router.events.on("routeChangeStart", closeSidebar);
+
+    return () => router.events.off("routeChangeStart", closeSidebar);
+  }, [router]);
 
   return (
     <>
