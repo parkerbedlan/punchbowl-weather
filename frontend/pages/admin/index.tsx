@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 
+import { FavoriteCountsChart } from "../../components/FavoriteCountsChart";
 import { FavoriteCountsTable } from "../../components/FavoriteCountsTable";
 import { SessionContext } from "../../components/SessionProvider";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
@@ -50,7 +51,10 @@ export default function AdminPage() {
           </p>
         )}
         {locations?.length > 0 && (
-          <FavoriteCountsTable days={days} locations={locations} />
+          <>
+            <FavoriteCountsChart days={days} locations={locations} />
+            <FavoriteCountsTable days={days} locations={locations} />
+          </>
         )}
       </section>
     </div>
