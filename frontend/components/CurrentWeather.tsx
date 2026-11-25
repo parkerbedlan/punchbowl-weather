@@ -1,6 +1,7 @@
 import React from "react";
 import capitalize from "capitalize";
 
+import { LastUpdated } from "./LastUpdated";
 import { Weather } from "../hooks/useWeather";
 
 export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
@@ -35,6 +36,8 @@ export const CurrentWeather = ({ weather }: { weather?: Weather }) => {
         <div className="text-lg font-medium">{Math.round(weather.wind)} mph</div>
         <div className="text-lg font-medium">{Math.round(weather.humidity)}%</div>
       </div>
+
+      <LastUpdated fetchedAt={weather.fetchedAt} />
     </div>
   );
 };

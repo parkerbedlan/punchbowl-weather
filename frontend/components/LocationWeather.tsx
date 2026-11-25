@@ -9,12 +9,12 @@ import {
   LOCATION_MISSING_MESSAGE,
   useLocation,
 } from "../hooks/useLocations";
-import { useWeather } from "../hooks/useWeather";
+import { WEATHER_ERROR_MESSAGE, useWeather } from "../hooks/useWeather";
 
 export const LocationWeather = ({ slug }: { slug?: string }) => {
   const { setLocationSlug } = useContext(SessionContext);
   const { location, isMissing, isError } = useLocation(slug);
-  const { weather } = useWeather(slug);
+  const { weather, isError: isWeatherError } = useWeather(slug);
 
   useEffect(() => {
     setLocationSlug(slug);
@@ -33,6 +33,11 @@ export const LocationWeather = ({ slug }: { slug?: string }) => {
       <LocationHeading name={location?.name} />
       {location && <FavoriteButton key={location.id} location={location} />}
       <CurrentWeather weather={weather} />
+      {isWeatherError && (
+        <p role="alert" className="text-center text-gray-700">
+          {WEATHER_ERROR_MESSAGE}
+        </p>
+      )}
     </div>
   );
 };

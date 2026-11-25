@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_22_185656) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_173723) do
   create_table "locations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.float "lat"
@@ -18,6 +18,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_22_185656) do
     t.string "name", null: false
     t.string "slug", null: false
     t.datetime "updated_at", null: false
+    t.json "weather_data"
+    t.datetime "weather_fetched_at"
+    t.datetime "weather_refresh_after"
     t.index ["slug"], name: "index_locations_on_slug", unique: true
   end
 

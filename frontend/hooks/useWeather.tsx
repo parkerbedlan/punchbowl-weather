@@ -1,41 +1,83 @@
 import useSWR from "swr";
-import objectPath from "object-path";
 
 export type Weather = {
-  temperature: any;
-  feelsLike: any;
-  wind: any;
-  humidity: any;
-  description: any;
-  icon: any;
+  temperature: number;
+  feelsLike: number;
+  wind: number;
+  humidity: number;
+  description: string;
+  icon: string;
+  fetchedAt: string;
 };
 
-const rawToWeather: (data: any) => Weather = (data) => ({
-  temperature: objectPath.get(data, "main.temp", 0.0),
-  feelsLike: objectPath.get(data, "main.feels_like", 0.0),
-  wind: objectPath.get(data, "wind.speed", 0.0),
-  humidity: objectPath.get(data, "main.humidity", 0),
-  description: objectPath.get(data, "weather.0.description", ""),
-  icon: objectPath.get(data, "weather.0.icon_uri", ""),
-});
+type WeatherResponse = {
+  temperature: number;
+  feels_like: number;
+  wind_speed: number;
+  humidity: number;
+  description: string;
+  icon_uri: string;
+  fetched_at: string;
+};
 
-const fetcher = (path) =>
-  fetch(path)
-    .then((response) => response.json())
-    .then((data) => rawToWeather(data));
+export const WEATHER_ERROR_MESSAGE =
+  "We couldn't load the weather. We'll try again shortly.";
 
-export const useWeather = (location_slug: string) => {
+const REFRESH_INTERVAL_IN_MILLISECONDS = 60_000;
+const FIRST_ERROR_RETRY_DELAY_IN_MILLISECONDS = 1_000;
+const LONGEST_ERROR_RETRY_DELAY_IN_MILLISECONDS = 30_000;
+
+const errorRetryDelay = (retryCount: number) => {
+  const doubledDelay =
+    FIRST_ERROR_RETRY_DELAY_IN_MILLISECONDS * 2 ** (retryCount - 1);
+  const randomSpread = 0.5 + Math.random();
+
+  return (
+    Math.min(doubledDelay, LONGEST_ERROR_RETRY_DELAY_IN_MILLISECONDS) *
+    randomSpread
+  );
+};
+
+const fetcher = async (path: string): Promise<Weather> => {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error(`The weather request failed with HTTP ${response.status}`);
+  }
+
+  const data: WeatherResponse = await response.json();
+
+  return {
+    temperature: data.temperature,
+    feelsLike: data.feels_like,
+    wind: data.wind_speed,
+    humidity: data.humidity,
+    description: data.description,
+    icon: data.icon_uri,
+    fetchedAt: data.fetched_at,
+  };
+};
+
+export const useWeather = (location_slug?: string) => {
   const { data, error } = useSWR<Weather, Error>(
     location_slug
       ? `${process.env.NEXT_PUBLIC_API_BASE}/api/locations/${location_slug}/weather`
       : null,
-    fetcher
+    fetcher,
+    {
+      refreshInterval: REFRESH_INTERVAL_IN_MILLISECONDS,
+      onErrorRetry: (_error, _key, _config, revalidate, revalidateOptions) => {
+        setTimeout(
+          () => revalidate(revalidateOptions),
+          errorRetryDelay(revalidateOptions.retryCount)
+        );
+      },
+    }
   );
 
   return {
     weather: data,
     isLoading: !data && !error,
-    isError: error,
+    isError: !data && Boolean(error),
   };
 };
 
