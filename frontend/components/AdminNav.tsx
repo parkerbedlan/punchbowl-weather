@@ -11,7 +11,7 @@ export const AdminNav = ({ variant }: { variant: "mobile" | "desktop" }) => {
   if (!isAdmin) return null;
 
   return (
-    <div className="mt-4 border-t border-gray-700 pt-4">
+    <div className="mb-4 border-b border-gray-700 pb-4">
       <Link
         href="/admin"
         className={`group flex items-center px-2 py-2 font-medium rounded-md ${

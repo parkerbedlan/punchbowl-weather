@@ -83,8 +83,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
-                    <LocationNav variant="mobile" />
                     <AdminNav variant="mobile" />
+                    <LocationNav variant="mobile" />
                   </nav>
                 </div>
               </DialogPanel>
@@ -105,8 +105,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               </div>
               <div className="flex-1 flex flex-col overflow-y-auto">
                 <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
-                  <LocationNav variant="desktop" />
                   <AdminNav variant="desktop" />
+                  <LocationNav variant="desktop" />
                 </nav>
               </div>
             </div>
