@@ -1,4 +1,6 @@
 class Api::UserFavoritesController < ApplicationController
+  before_action :require_current_user, only: [:create, :destroy]
+
   def index
     # An empty list rather than an error when no user exists, so the frontend
     # renders normally before anyone has been created.
@@ -8,17 +10,17 @@ class Api::UserFavoritesController < ApplicationController
   end
 
   def create
-    return head :not_found if current_user.nil?
+    location = Location.find_by(id: params[:location_id])
+    return head :not_found if location.nil?
 
-    favorite = current_user.user_favorites.create(location_id: params[:location_id])
+    favorite = current_user.user_favorites.find_or_create_by!(location: location)
 
-    render json: favorite.as_json(only: FAVORITE_FIELDS), status: :created
+    render json: favorite.as_json(only: FAVORITE_FIELDS),
+           status: favorite.previously_new_record? ? :created : :ok
   end
 
   def destroy
-    favorite = current_user.user_favorites.find_by(location_id: params[:id])
-
-    favorite.destroy
+    current_user.user_favorites.where(location_id: params[:id]).destroy_all
     head :no_content
   end
 
@@ -27,4 +29,8 @@ class Api::UserFavoritesController < ApplicationController
   # The shape the frontend expects; see the UserFavorite type in
   # frontend/hooks/useFavorites.tsx.
   FAVORITE_FIELDS = [:id, :location_id, :user_id].freeze
+
+  def require_current_user
+    head :not_found if current_user.nil?
+  end
 end

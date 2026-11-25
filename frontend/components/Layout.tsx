@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useMemo } from "react";
+import React, { ReactNode } from "react";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -9,34 +9,11 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import {
-  XMarkIcon,
-  MapPinIcon,
-  Bars3Icon,
-  StarIcon,
-} from "@heroicons/react/24/outline";
-import { useLocations, Location } from "../hooks/useLocations";
-import { useUserFavorites } from "../hooks/useFavorites";
-import { SessionContext } from "./SessionProvider";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const locationPath = ({ slug }: Location) => `/locations/${slug}`;
+import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { LocationNav } from "./LocationNav";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { locations } = useLocations();
-  const { locationSlug } = useContext(SessionContext);
-  // const { favorites } = useUserFavorites();
-
-  const isSelected = ({ slug }: Location) => slug === locationSlug;
-
-  const favoriteLocationIds = []; // Remove this line and uncomment the section below when you implement favorites.
-  // const favoriteLocationIds = useMemo(() => {
-  //   return favorites?.map(({ location_id }) => location_id) ?? [];
-  // }, [favorites]);
 
   return (
     <>
@@ -104,37 +81,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
-                    {locations && locations.map((location) => (
-                      <Link
-                        key={"location-link"}
-                        href={locationPath(location)}
-                        className={classNames(
-                          isSelected(location)
-                            ? "bg-gray-900 text-white"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        )}
-                      >
-                        <MapPinIcon
-                          className={classNames(
-                            isSelected(location)
-                              ? "text-red-500"
-                              : "text-gray-400 group-hover:text-gray-300",
-                            "mr-4 shrink-0 h-6 w-6"
-                          )}
-                          aria-hidden="true"
-                        />
-                        {location.name}
-                        <div className="flex grow justify-end">
-                          <StarIcon
-                            className={classNames(
-                              favoriteLocationIds.includes(location.id) ? "text-red-500" : "text-gray-400",
-                              'h-6 w-6'
-                            )}
-                          />
-                        </div>
-                      </Link>
-                    ))}
+                    <LocationNav variant="mobile" />
                   </nav>
                 </div>
               </DialogPanel>
@@ -155,37 +102,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               </div>
               <div className="flex-1 flex flex-col overflow-y-auto">
                 <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
-                  {locations && locations.map((location) => (
-                    <Link
-                      key={"location.name"}
-                      href={locationPath(location)}
-                      className={classNames(
-                        isSelected(location)
-                          ? "bg-gray-900 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                      )}
-                    >
-                      <MapPinIcon
-                        className={classNames(
-                          isSelected(location)
-                            ? "text-red-500"
-                            : "text-gray-400 group-hover:text-gray-300",
-                          "mr-3 shrink-0 h-6 w-6"
-                        )}
-                        aria-hidden="true"
-                      />
-                      {location.name}
-                      <div className="flex grow justify-end">
-                        <StarIcon
-                          className={classNames(
-                            favoriteLocationIds.includes(location) ? "text-red-500" : "text-gray-400",
-                            'h-6 w-6'
-                          )}
-                        />
-                      </div>
-                    </Link>
-                  ))}
+                  <LocationNav variant="desktop" />
                 </nav>
               </div>
             </div>

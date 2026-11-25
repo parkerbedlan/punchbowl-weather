@@ -1,34 +1,31 @@
+import { useState } from "react";
 
-import { useUserFavorites } from "../hooks/useFavorites";
+import { FAVORITE_ERROR_MESSAGE, useFavoriteToggle } from "../hooks/useFavorites";
+import { Location } from "../hooks/useLocations";
+import { FavoriteStarIcon } from "./FavoriteStarIcon";
 
-export default function FavoriteButton({ isFavorite, locationId }: { isFavorite: boolean, locationId: number }) {
-  const { mutate } = useUserFavorites();
+export default function FavoriteButton({ location }: { location: Location }) {
+  const { isFavorite, isDisabled, toggle } = useFavoriteToggle(location.id);
+  const [toggleFailed, setToggleFailed] = useState(false);
 
-  const handleToggleFavorite = () => {
-    if (isFavorite) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/user_favorites/${locationId}`, {
-        method: 'DELETE',
-      })
-    } else {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/user_favorites`,
-        {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ location_id: locationId })
-        },
-      ).then(() => mutate())
-    }
-  }
+  const handleToggleFavorite = async () => setToggleFailed(!(await toggle()));
 
   return (
-    <button
-      className="px-4 py-2 font-semibold text-sm bg-sky-500 text-white rounded-none"
-      onClick={handleToggleFavorite}
-    >
-      {isFavorite ? 'Remove from' : 'Add to'} favorites
-    </button>
+    <div className="flex flex-col items-center space-y-2">
+      <button
+        type="button"
+        className="inline-flex items-center gap-2 px-4 py-2 font-semibold text-sm bg-sky-500 text-white rounded-none disabled:opacity-50"
+        disabled={isDisabled}
+        onClick={handleToggleFavorite}
+      >
+        <FavoriteStarIcon isFavorite={isFavorite} outlineClassName="text-white" />
+        {isFavorite ? 'Remove from' : 'Add to'} favorites
+      </button>
+      {toggleFailed && (
+        <p role="alert" className="text-sm text-red-600">
+          {FAVORITE_ERROR_MESSAGE}
+        </p>
+      )}
+    </div>
   );
 };

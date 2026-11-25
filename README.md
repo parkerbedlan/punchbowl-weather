@@ -9,4 +9,4 @@ cd backend
 bin/rails db:seed
 ```
 
-The seed script creates the preset locations. It is safe to run more than once.
+The seed script creates the preset locations and one user. The app treats that user as the signed-in user. The script is safe to run more than once.

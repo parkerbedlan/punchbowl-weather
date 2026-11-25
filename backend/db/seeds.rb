@@ -14,3 +14,5 @@
     location.assign_attributes(attributes)
   end
 end
+
+User.first_or_create!

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_22_183914) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_22_185656) do
   create_table "locations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.float "lat"
@@ -26,7 +26,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_22_183914) do
     t.integer "location_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
-    t.index ["user_id", "location_id"], name: "index_user_favorites_on_user_id_and_location_id"
+    t.index ["user_id", "location_id"], name: "index_user_favorites_on_user_id_and_location_id", unique: true
     t.index ["user_id"], name: "index_user_favorites_on_user_id"
   end
 
@@ -35,5 +35,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_22_183914) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "user_favorites", "locations"
   add_foreign_key "user_favorites", "users"
 end
