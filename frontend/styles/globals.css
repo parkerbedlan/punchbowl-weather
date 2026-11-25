@@ -1,0 +1,5 @@
+/* Tailwind v4 is configured in CSS rather than tailwind.config.js.
+   Content sources are detected automatically. */
+@import "tailwindcss";
+
+@plugin "@tailwindcss/forms";
